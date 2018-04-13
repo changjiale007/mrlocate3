@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 /**
  * Created by Administrator on 2018/2/27.
@@ -21,10 +22,13 @@ public class test2 {
         set.add("f");
         set.add("e");
         set.add("e");
-        for (String a :
-                set) {
-            System.out.println(a);
-        }
+     set
+             .forEach(new Consumer<String>() {
+                 @Override
+                 public void accept(String s) {
+                     System.out.println(s);
+                 }
+             });
 
 
 
