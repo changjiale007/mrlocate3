@@ -10,13 +10,6 @@ object AppSettings {
   val maxHeight = 200
   val deltaHeight = 5
 
-  def main(args: Array[String]): Unit = {
-
-
-    val conf = new SparkConf()
-    val spark=AppSettings.setConf(conf)
-    spark.sql("select * from class_test").show(10)
-  }
 
   def setConf(): SparkSession ={
     val conf=new SparkConf()
@@ -28,7 +21,9 @@ object AppSettings {
       .set("spark.driver.maxResultSize","20g")
     val hiveContext = SparkSession.builder()
       .config(conf)
+        .master("local")
       .appName("Mrlocate"+System.currentTimeMillis()).enableHiveSupport().getOrCreate()
+
     hiveContext
 
   }
@@ -41,6 +36,7 @@ object AppSettings {
       .set("spark.driver.maxResultSize","20g")
     val hiveContext = SparkSession.builder()
       .config(conf)
+        .master("local")
       .appName("Mrlocate"+System.currentTimeMillis()).enableHiveSupport().getOrCreate()
     hiveContext
 

@@ -1,9 +1,11 @@
 package utils;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,8 +31,13 @@ public final class StringUtil {
      * @param symbol 链接的符号
      * @return 处理后的字符串
      */
-    public  static String joinString(List list, String symbol) {
-        String result = "";
+    public  static String joinString(List list, String symbol) throws ParseException {
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        String result = "2017-06-02";
+        Date date=sdf.parse(result);
+
+
+
         if (list != null) {
             for (Object o : list) {
                 String temp = o.toString();
@@ -446,5 +453,25 @@ public final class StringUtil {
      */
     public  static boolean leftEquals(String str1,String str2,int length){
         return left(str1,length).equals(left(str2,length));
+    }
+
+    public static void main(String[] args) {
+            List <String>list=new ArrayList();
+            list.add("a");
+            Map<String,List> map=new HashMap<String,List>();
+            map.put("ss",list);
+            map.get("ss").add("b");
+            map.forEach(new BiConsumer<String, List>() {
+                @Override
+                public void accept(String s, List list) {
+                    list.forEach(new Consumer() {
+                        @Override
+                        public void accept(Object o) {
+                            System.out.println(o.toString());
+                        }
+                    });
+                }
+            });
+
     }
 }

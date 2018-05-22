@@ -24,7 +24,7 @@ object mdtAdJustFinger {
         |   a.n_objectid,a.n_rsrp,a.height
         |   from finger0 a
         |   left join
-        |   mdtLocate b on a.gridid = b.gridid
+        |   (select * from mdtlocate where avgrsrp !=0.0 ) b on a.gridid = b.gridid
       """.stripMargin)
 
     //校准高层指纹库

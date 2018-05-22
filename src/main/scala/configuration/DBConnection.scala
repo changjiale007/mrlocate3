@@ -17,7 +17,7 @@ object DBConnection {
     "jdbc:sqlserver://"+ip+":1433;DatabaseName="+databasename+";user="+username+";password="+password
   }
 
-  def getConnection(): Connection = {
+    def getConnection(): Connection = {
     Class.forName(driver)
     java.sql.DriverManager.getConnection(getUrl(), username, password)
   }

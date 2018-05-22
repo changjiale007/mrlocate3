@@ -34,7 +34,7 @@ object threed_mrlocateV3 {
     val mroResult = ConfigManager.getProperty("mroResultTable")
     val database=ConfigManager.getProperty("dataBaseName")
     //判断是否有当天分区表数据没有直接退出
-    if(partitionNum==0){
+      if(partitionNum==0){
       hiveContext.sql(s"use ${database}")
       val testData=hiveContext.sql(s"select * from ${mroPartitionTableName} where day = ${day} and hour = '${hour}' limit 1").rdd
       if(testData.isEmpty()){
