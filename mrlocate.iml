@@ -11,6 +11,15 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/Desktop/mysql-connector-java-5.1.7-bin.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.11.11" level="project" />
     <orderEntry type="library" name="Maven: org.apache.spark:spark-core_2.11:2.1.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.avro:avro-mapred:hadoop2:1.7.7" level="project" />

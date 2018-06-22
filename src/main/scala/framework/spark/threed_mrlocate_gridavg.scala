@@ -4,12 +4,8 @@ import configuration.{AppSettings, ConfigManager, DBHelper}
 import framework.dao.{buildfloorrsrpDao, mrlocateDao}
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.hive.HiveContext
-import org.apache.spark.{SparkConf, SparkContext}
 
-/**
- * Created by xuximing on 2017/6/14.....
- */
+
 object threed_mrlocate_gridavg {
 Logger.getLogger("org").setLevel(Level.WARN)
   def main(args: Array[String]) {

@@ -125,5 +125,23 @@ val FingerLong2SamplingLong=udf((cell_lon:Double, cell_lat:Double,ta:Int,aoa:Int
 
     WMValue
   }
+  //计算一对经纬度之间的距离
+  def getDistanceByLonAndLat(lon1:Double,lon2:Double,lat1:Double,lat2:Double)={
+
+      val EARTH_RADIUS = 6371.393
+      def rad(d:Double):Double={
+          d*math.Pi/180.0
+      }
+
+      val radLat1 = rad(lat1)
+      val radLat2 = rad(lat2)
+      val a = radLat1-radLat2
+      val b = rad(lon1)-rad(lon2)
+      var s=2 * math.asin(math.sqrt(math.pow(math.sin(a/2),2) +
+        math.cos(radLat1)*math.cos(radLat2)*math.pow(math.sin(b/2),2)))
+       s=s * EARTH_RADIUS
+       s = math.round(s*1000)
+      s
+  }
 
 }

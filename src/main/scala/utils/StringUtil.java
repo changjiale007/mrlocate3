@@ -62,6 +62,7 @@ public final class StringUtil {
         if (str1 != null && str2 != null) {
             str2 = str2.replaceAll("\\s*", "");
             String[] arr = str2.split(",");
+
             for (String t : arr) {
                 if (t.equals(str1.trim())) {
                     return true;

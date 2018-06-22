@@ -2,10 +2,8 @@ package configuration
 
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.execution.datasources.jdbc.JdbcUtils
 
-/**
- * Created by xuximing on 2016/4/18.
- */
 object AppSettings {
   val maxHeight = 200
   val deltaHeight = 5
@@ -25,7 +23,7 @@ object AppSettings {
       .appName("Mrlocate"+System.currentTimeMillis()).enableHiveSupport().getOrCreate()
 
     hiveContext.sql("set hive.exec.compress.output=true")
-    hiveContext.sql("set mapred.output.compression.codec=org.apache.hadoop.io.compress.GzipCodec")
+    hiveContext.sql("set mapred.output.compression.codec=org.apache.hadoop.io.compress.BzipCodec")
     hiveContext.sql("set mapred.output.compression.type=BLOCK")
     hiveContext.sql("set hive.exec.compress.intermediate=true")
     hiveContext.sql("set hive.intermediate.compression.codec=org.apache.hadoop.io.compress.SnappyCodec")
@@ -51,7 +49,7 @@ object AppSettings {
         .master("local")
       .appName("Mrlocate"+System.currentTimeMillis()).enableHiveSupport().getOrCreate()
     hiveContext.sql("set hive.exec.compress.output=true")
-    hiveContext.sql("set mapred.output.compression.codec=org.apache.hadoop.io.compress.GzipCodec")
+    hiveContext.sql("set mapred.output.compression.codec=org.apache.hadoop.io.compress.BzipCodec")
     hiveContext.sql("set mapred.output.compression.type=BLOCK")
     hiveContext.sql("set hive.exec.compress.intermediate=true")
     hiveContext.sql("set hive.intermediate.compression.codec=org.apache.hadoop.io.compress.SnappyCodec")

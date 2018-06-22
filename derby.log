@@ -1,7 +1,7 @@
 ----------------------------------------------------------------
-Tue Apr 17 16:52:59 CST 2018:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-0162-d2ce-9a3a-00000a0e5998 
-on database directory E:\hadoop6\mrlocate\metastore_db with class loader org.apache.spark.sql.hive.client.IsolatedClientLoader$$anon$1@a68df9 
+Mon Jun 11 13:38:30 CST 2018:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-0163-ed5a-51cb-00000c8d5e88 
+on database directory E:\hadoop6\mrlocate\metastore_db with class loader org.apache.spark.sql.hive.client.IsolatedClientLoader$$anon$1@710b30ef 
 Loaded from file:/E:/hadoop4/maven/repository/org/apache/derby/derby/10.10.2.0/derby-10.10.2.0.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_31-b13
