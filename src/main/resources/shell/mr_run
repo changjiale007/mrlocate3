@@ -1,0 +1,119 @@
+#!/bin/bash
+
+for ((var=0;var<20;var++));
+do
+{
+/opt/app/spark/bin/spark-submit --class framework.spark.threed_mrolocate_test  --master spark://hadoop1:7077,hadoop2:7077  --driver-memory 10g --executor-memory 4g --total-executor-cores 12 --jars  /home/app/sqljdbc4.jar /home/app/aliveble.jar 2017112400 $var
+} &
+done
+wait
+
+
+
+
+TimeStamp	eNBID	MME Group ID	MME Code	IMSI	IMEI	MME UE S1AP ID	CellID	SCRSRP	SCRSRQ	Longitude	LatitudeSign	Latitude	AltitudeDirection	Altitude	UncertaintySemiMajor	UncertaintySemiMinor	OrientationMajorAxis	UncertaintyAltitude	Confidence	NC1PCI	NC1Freq
+
+TimeStamp	eNBID	MME Group ID	MME Code	IMSI	IMEI	MME UE S1AP ID	CellID	SC PCI	SC Freq	SCRSRP	SCRSRQ	Longitude	LatitudeSign	Latitude	AltitudeDirection	Altitude	UncertaintySemiMajor	UncertaintySemiMinor	OrientationMajorAxis	UncertaintyAltitude	Confidence	NC1PCI	NC1Freq	NC1RSRP	NC1RSRQ	NC2PCI	NC2Freq	NC2RSRP
+
+115 120  30 35
+
+
+2610300_778675|
+|                                                                                                                2610300_778675|
+|                                                                                                                2610300_778675|CSC
+|                                                                                                                2610203_778658|
+|                                                                                                                2610203_778658|
+|                                                                                                                2610203_778658|
+|                                                                                                                2610203_778658|
+|                                                                                                                2610203_778658|
+|                                                                                                                2610203_778658|
+|                                                                                                                2610203_778658|
+|                                                                                                                2610203_778658|
+|                                                                                                                2610291_778594|
+|                                                                                                                2610203_778658|
+|                                                                                                                2610203_778658|
+|                                                                                                                2610291_778594|
+|                                                                                                                2610203_778658|
+|                                                                                                                2610207_778662|
+|                                                                                                                2610207_778662|
+|                                                                                                                2610207_778662|
+|                                                                                                                2610291_778594|
+
+
+
+
+
+insert overwrite local directory '/home/datangdev/out/mdtlocate'
+row format delimited
+fields terminated by ','
+select * from mdtlocate distribute by 1
+
+
+
+
+
+create table fingerserver (
+gridid string,
+longitude double,
+latitude double,
+rsrp int 
+)
+row format delimited fields terminated by ','
+11239945
+5021656
+5021656
+
+
+
+
+
+insert into fingerserver 
+ select gridid,longitude,latitude,avg(rsrp) as avgrsrp from finger0 
+ group by gridid,longitude,latitude
+ distribute by 1
+ 
+ 
+134758786	2610882_776956	117.2697602976	32.92067784258419	-76.5	134758785	-91	0
+134758786	2610882_776956	117.2697602976	32.92067784258419	-76.5	134758785	-91	0
+
+
+ 
+ 
+insert overwrite local directory '/home/datangdev/out/haha/result1'
+row format delimited
+fields terminated by ','
+select * from result1  distribute by 1 limit 100;
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ insert into table mdtFinger0
+ select
+   a.objectid as objectid ,
+   case when  b.gridid is null then a.gridid else b.gridid end ,
+   case when  b.longitude is null then a.longitude else b.longitude end ,
+   case when  b.latitude is null then a.latitude else b.latitude end,
+   case when  b.avgrsrp = 0.0 then a.rsrp else b.avgrsrp end,
+   a.n_objectid,a.n_rsrp,a.height
+   from finger0 a
+   left join
+   mdtLocate b 
+   on a.gridid = b.gridid
+   
+insert overwrite local directory '/home/datangdev/out/haha/result2' 
+row format delimited 
+fields terminated by ',' 
+select * from resultall2 distribute by 1 
+
+sed -i '1iGridID,ObjectID,Longitude,Latitude,AverageLteScRSRP,LteScRSRP,LteNcRSRP,MRPointNum,AverageLteScsinrUL,AverageRSRQ,ReportTime,TimeStamp,OverlapRatioCount,Height,RSRP_140_110_COUNT,RSRP_110_105_COUNT,RSRP_105_90_COUNT,RSRP_90_80_COUNT,RSRP_80_COUNT,SINRUL_3_COUNT,SINRUL_3_0_COUNT,SINRUL_0_10_COUNT,SINRUL_10_15_COUNT,SINRUL_15_COUNT,IsInnDoor'  ./mrLocate.csv
+
+sed -i '1iaid,advertiserid,campaignid,creativeid,creativesize,adcategoryid,productid,producttype,uid,age,gender,marriagestatus,education,consumptionability,lbs,interest1_1,interest1_2,interest1_3,interest1_4,interest1_5,interest2_1,interest2_2,interest2_3,interest2_4,interest2_5,interest3_1,interest3_2,interest3_3,interest3_4,interest3_5,interest4_1,interest4_2,interest4_3,interest4_4,interest4_5,interest5_1,interest5_2,interest5_3,interest5_4,interest5_5,kw1_1,kw1_2,kw1_3,kw1_4,kw1_5,kw2_1,kw2_2,kw2_3,kw2_4,kw2_5,kw3_1,kw3_2,kw3_3,kw3_4,kw3_5,topic1_1,topic1_2,topic1_3,topic1_4,topic1_5,topic2_1,topic2_2,topic2_3,topic2_4,topic2_5,topic3_1,topic3_2,topic3_3,topic3_4,topic3_5,appidinstall,ct,os,carrier,house,label'
+sed -i '1iaid,advertiserid,campaignid,creativeid,creativesize,adcategoryid,productid,producttype,uid,age,gender,marriagestatus,education,consumptionability,lbs,interest1_1,interest1_2,interest1_3,interest1_4,interest1_5,interest2_1,interest2_2,interest2_3,interest2_4,interest2_5,interest3_1,interest3_2,interest3_3,interest3_4,interest3_5,interest4_1,interest4_2,interest4_3,interest4_4,interest4_5,interest5_1,interest5_2,interest5_3,interest5_4,interest5_5,kw1_1,kw1_2,kw1_3,kw1_4,kw1_5,kw2_1,kw2_2,kw2_3,kw2_4,kw2_5,kw3_1,kw3_2,kw3_3,kw3_4,kw3_5,topic1_1,topic1_2,topic1_3,topic1_4,topic1_5,topic2_1,topic2_2,topic2_3,topic2_4,topic2_5,topic3_1,topic3_2,topic3_3,topic3_4,topic3_5,appidinstall,ct,os,carrier,house'
+
+sed -i '1iaid,advertiserid,campaignid,creativeid,creativesize,adcategoryid,productid,producttype,uid,age,gender,marriagestatus,education,consumptionability,lbs,interest1,interest2,interest3,interest4,interest5,kw1,kw2,kw3,topic1,topic2,topic3,appidinstall,ct,os,carrier,house'
+
+
+GridID,ObjectID,Longitude,Latitude,AverageLteScRSRP,LteScRSRP,LteNcRSRP,MRPointNum,AverageLteScsinrUL,AverageRSRQ,ReportTime,TimeStamp,OverlapRatioCount,Height,RSRP_140_110_COUNT,RSRP_110_105_COUNT,RSRP_105_90_COUNT,RSRP_90_80_COUNT,RSRP_80_COUNT,SINRUL_3_COUNT,SINRUL_3_0_COUNT,SINRUL_0_10_COUNT,SINRUL_10_15_COUNT,SINRUL_15_COUNT,IsInnDoor

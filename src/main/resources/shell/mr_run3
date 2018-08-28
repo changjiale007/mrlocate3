@@ -1,0 +1,9 @@
+#!/bin/bash
+
+for ((var=60;var<80;var++));
+do
+{
+/opt/app/spark/bin/spark-submit --class framework.spark.threed_mrolocate_test --master spark://hadoop1:7077,hadoop2:7077  --driver-memory 10g --executor-memory 4g --total-executor-cores 12 --jars  /home/app/sqljdbc4.jar /home/app/aliveble.jar 2017112400 $var
+} &
+done
+wait

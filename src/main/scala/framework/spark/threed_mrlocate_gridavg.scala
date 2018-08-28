@@ -186,33 +186,34 @@ Logger.getLogger("org").setLevel(Level.WARN)
   def generateLotQCI1(hiveContext: SparkSession, day: String,databaseName:String,result:String,mroResultTables:String,mroTable:String,lotqci:String) = {
     hiveContext.sql(s"use ${databaseName}")
 ////    //将结果与原始mrojoin 计算出qci 和 LteScPUSCHPRBNum 值
- hiveContext.sql(s"create table if not exists ${result} (gridid string,objectid bigint,time_stamp string,mmeues1apid string,ulqci1 string,dlqci1 string,ltescpuschprbnum int,ltescpdschprbnum int) partitioned by (day string)")
+ hiveContext.sql(s"create table if not exists ${result} (gridid string,objectid bigint,time_stamp string,mmeues1apid string,ulqci1 string,dlqci1 string,ltescpuschprbnum int,ltescpdschprbnum int,ta int) partitioned by (day string)")
     hiveContext.sql(
       s"""
         | insert overwrite table ${result} partition(day = '${day}')
-        |     select a1.gridid,a1.objectid,a1.time_stamp,a1.mmeues1apid,a2.ulqci1,a2.dlqci1,a2.ltescpuschprbnum,a2.ltescpdschprbnum
+        |     select a1.gridid,a1.objectid,a1.time_stamp,a1.mmeues1apid,a2.ulqci1,a2.dlqci1,a2.ltescpuschprbnum,a2.ltescpdschprbnum，a2.ta
         |               from
         |                     (select * from doublemroresults where day = '${day}') a1
         |                     inner join
-        |                     (select distinct objectid,time_stamp,mmeues1apid,ulqci1,dlqci1,ltescpuschprbnum,ltescpdschprbnum from ${mroTable} where day = '${day}')  a2
+        |                     (select distinct objectid,time_stamp,mmeues1apid,ulqci1,dlqci1,ltescpuschprbnum,ltescpdschprbnum,TA from ${mroTable} where day = '${day}')  a2
         |                     on a1.objectid=a2.objectid and a1.time_stamp=a2.time_stamp and a1.mmeues1apid=a2.mmeues1apid
         |
         |
        """.stripMargin)
 
 
-    hiveContext.sql(s"create table if not exists ${lotqci} (gridid string,udtotal bigint,uptotal int,dltotal int,uplost double,dllost double,pusum int, pdsum int)")
+    hiveContext.sql(s"create table if not exists ${lotqci} (gridid string,ta int,udtotal bigint,uptotal int,dltotal int,uplost double,dllost double,pusum int, pdsum int)")
     hiveContext.sql(
       s"""
         | insert overwrite table ${lotqci}
-        |      select gridid,sum(case when ulqci1<0 or ulqci1 is null then 0 else 1 end)+ sum(case when dlqci1<0 or dlqci1 is null then 0 else 1 end)-sum(case when ulqci1<0 or ulqci1 is null  or dlqci1<0  or dlqci1 is null then 0 else 1 end) as udtotal,
+        |      select gridid,,ta,sum(case when ulqci1<0 or ulqci1 is null then 0 else 1 end)+ sum(case when dlqci1<0 or dlqci1 is null then 0 else 1 end)-sum(case when ulqci1<0 or ulqci1 is null  or dlqci1<0  or dlqci1 is null then 0 else 1 end) as udtotal,
         |             sum(case when ulqci1<0 or ulqci1 is null then 0 else 1 end) as uptotal,
         |             sum(case when dlqci1<0 or dlqci1 is null then 0 else 1 end) as dltotal,
         |             cast(sum(case when ulqci1<0 or ulqci1 is null  then 0 else ulqci1 end)/sum(case when ulqci1<0  or ulqci1 is null then 0 else 1 end) as decimal(18,4)) as uplost,
         |             cast(sum(case when dlqci1<0 or dlqci1 is null then 0 else dlqci1 end)/sum(case when dlqci1<0  or dlqci1 is null  then 0 else 1 end) as decimal(18,4)) as dllost,
         |             sum(case when LteScPUSCHPRBNum<0 or LteScPUSCHPRBNum is null then 0 else LteScPUSCHPRBNum end) as pusum,
-        |             sum(case when LteScPDSCHPRBNum<0 or LteScPDSCHPRBNum is null then 0 else LteScPDSCHPRBNum end) as pdsum
-        |      from ${result} where day = '${day}' group by gridid
+        |             sum(case when LteScPDSCHPRBNum<0 or LteScPDSCHPRBNum is null then 0 else LteScPDSCHPRBNum end) as pdsum,
+        |
+        |      from ${result} where day = '${day}' group by gridid,ta
         |
       """.stripMargin)
 
@@ -230,7 +231,7 @@ Logger.getLogger("org").setLevel(Level.WARN)
         | t.udtotal,
         | t.uptotal,t.uplost/10 as uprate,t.ulqci1,t.ulqci20,t.ulqci80,
         | t.dllost,t.dllost/10 as dlrate,t.dlqci1,t.dlqci20,t.dlqci80,
-        | avgsinrul, pusum,pdsum,overlapd
+        | avgsinrul, pusum,pdsum,overlapd,t.AverageTA
         |  from ${mrLocate} mr
         |  left join (
         |  select m.GridID, uptotal,uplost ,pusum,pdsum,udtotal,
@@ -240,7 +241,8 @@ Logger.getLogger("org").setLevel(Level.WARN)
         |  dllost,dllost,
         |  SUM( case when dllost /10 <= 1   then MRPointNum else 0 end ) dlqci1,
         |  SUM( case when ( dllost /10 <= 20 and  dllost /10 >= 1) then MRPointNum else 0 end) dlqci20,
-        |   SUM( case when dllost /10 <= 80 and  dllost /10 >= 20 then MRPointNum else 0 end) as dlqci80
+        |  SUM( case when dllost /10 <= 80 and  dllost /10 >= 20 then MRPointNum else 0 end) as dlqci80,
+        |  SUM( lotqci.ta * m.MRPointNum ) / SUM (MRPointNum) as AverageTA
         |  from ${mrLocate} m
         | left join ${lotqci} on lotqci.gridid = m.GridID
         |  group by m.GridID,uptotal,uplost,dllost,dllost,pusum,pdsum,udtotal
@@ -248,10 +250,10 @@ Logger.getLogger("org").setLevel(Level.WARN)
         | left join (select distinct gridid,longitude,latitude from  ${finger0} ) as f on f.gridid = mr.GridID
       """.stripMargin)
     //生成栅格化结果表
-        hiveContext.sql("create table mroInfo(objectid int,mmeues1apid string,time_stamp string,ltescrsrp int,ltescrsrq int,ltescsinrul int,gridid string,longitude double,latitude double,hour string,height int) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','")
+        hiveContext.sql("create table if not exist mroInfo(objectid int,mmeues1apid string,time_stamp string,ltescrsrp int,ltescrsrq int,ltescsinrul int,gridid string,longitude double,latitude double,hour string,height int) ROW FORMAT DELIMITED FIELDS TERMINATED BY ','")
         hiveContext.sql(
           s"""
-            |  insert into table mroInfo
+            |  insert overwrite table mroInfo
             |  select a1.objectid,a1.mmeues1apid,a1.time_stamp,a1.ltescrsrp,a1.ltescrsrq,
             |  a1.ltescsinrul,a1.gridid,a2.longitude,a2.latitude,a1.hour,a1.height from
             |  doublemroresults a1
