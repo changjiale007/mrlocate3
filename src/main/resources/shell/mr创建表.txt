@@ -1,0 +1,46 @@
+
+
+
+CREATE EXTERNAL TABLE `mro`(
+  `objectid` bigint, 
+  `mmeues1apid` string, 
+  `time_stamp` string, 
+  `ncellobjectid` bigint, 
+  `ltescrsrp` int, 
+  `ltescrsrq` int, 
+  `ltescsinrul` double, 
+  `ltencrsrp` int, 
+  `ta` int, 
+  `aoa` int, 
+  `LteScPUSCHPRBNum` int,
+  `LteScPDSCHPRBNum` int,
+  `ulqci1` double, 
+  `dlqci1` double)
+PARTITIONED BY ( 
+  `day` string, 
+  `hour` string)
+ROW FORMAT DELIMITED 
+  FIELDS TERMINATED BY ',' 
+
+  
+
+
+  alter table mro add partition(day='20171116',hour='00') location '/data1/guiyang/20171116/00';
+  alter table mro add partition(day='20171116',hour='06') location '/data1/guiyang/20171116/06';
+  alter table mro add partition(day='20171116',hour='07') location '/data1/guiyang/20171116/07';
+  alter table mro add partition(day='20171116',hour='08') location '/data1/guiyang/20171116/08';
+  alter table mro add partition(day='20171116',hour='09') location '/data1/guiyang/20171116/09';
+  alter table mro add partition(day='20171116',hour='10') location '/data1/guiyang/20171116/10';
+  alter table mro add partition(day='20171116',hour='11') location '/data1/guiyang/20171116/11';
+  alter table mro add partition(day='20171116',hour='12') location '/data1/guiyang/20171116/12';
+  alter table mro add partition(day='20171116',hour='13') location '/data1/guiyang/20171116/13';
+  alter table mro add partition(day='20171116',hour='14') location '/data1/guiyang/20171116/14';
+  alter table mro add partition(day='20171116',hour='15') location '/data1/guiyang/20171116/15';
+  alter table mro add partition(day='20171116',hour='16') location '/data1/guiyang/20171116/16';
+  alter table mro add partition(day='20171116',hour='17') location '/data1/guiyang/20171116/17';
+  alter table mro add partition(day='20171116',hour='18') location '/data1/guiyang/20171116/18';
+  alter table mro add partition(day='20171116',hour='19') location '/data1/guiyang/20171116/19';
+  alter table mro add partition(day='20171116',hour='20') location '/data1/guiyang/20171116/20';
+  alter table mro add partition(day='20171116',hour='21') location '/data1/guiyang/20171116/21';
+  alter table mro add partition(day='20171116',hour='22') location '/data1/guiyang/20171116/22';
+  alter table mro add partition(day='20171116',hour='23') location '/data1/guiyang/20171116/23';
